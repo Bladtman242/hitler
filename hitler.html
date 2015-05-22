@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+	<style>
+		canvas.centre
+		{
+			//border: 1px solid;
+			position:fixed;
+			left:50%;
+			top:38.2%;
+			margin-left: -150px;
+			margin-top: -150px;
+		}
+		html, body
+		{
+			height: 100%;
+		}
+	</style>
+	<body>
+		<canvas width="300" height="300" id="canvas" class="centre">
+		</canvas>
+	</body>
+</html>
+
+<script>
+function eyes(fillColor, strokeColor) {
+	var canvas = document.getElementById("canvas");
+	var ctx = canvas.getContext("2d");
+	var oldStroke = ctx.strokeStyle;
+	var oldFill = ctx.fillStyle;
+
+	strokeColor = undefined === strokeColor ? "black" : strokeColor;
+
+	ctx.fillStyle = fillColor;
+	ctx.strokeStyle = strokeColor;
+
+	ctx.beginPath();
+	ctx.arc(canvas.width/2.5, canvas.height/2, canvas.height/20, 0, 2*Math.PI);
+	ctx.fill();
+	ctx.stroke();
+	
+	ctx.beginPath();
+	ctx.arc(canvas.width - canvas.width/2.5, canvas.height/2, canvas.height/20, 0, 2*Math.PI);
+	ctx.fill();
+	ctx.stroke();
+
+	ctx.fillStyle = oldFill;
+	ctx.strokeStyle = oldStroke;
+}
+
+var canvas = document.getElementById("canvas");
+var ctx = canvas.getContext("2d");
+
+var xm = canvas.width/2;
+var ym = canvas.height/2;
+var headRadius = canvas.height/3;
+
+var mustW = canvas.width/10;
+var mustH = canvas.height/20;
+
+//head
+ctx.beginPath();
+ctx.arc(xm, ym, headRadius, 0*Math.PI, 2*Math.PI, false);
+ctx.stroke();
+
+//mustache
+ctx.beginPath();
+ctx.rect(xm-mustW/2, ym+canvas.height/7.5 - mustH/2, mustW, mustH);
+ctx.fill();
+ctx.stroke();
+
+//eyes
+eyes("#FFFFFF")
+
+//mouth
+ctx.beginPath();
+ctx.moveTo(canvas.width*2/5, 205);
+ctx.lineTo(canvas.width*3/5, 205);
+ctx.stroke();
+
+//hair
+ctx.beginPath();
+var hairTopX = Math.cos(-0.3 * Math.PI) * headRadius + xm;
+var hairTopY = Math.sin(-0.3 * Math.PI) * headRadius + ym;
+
+var hairBottomX = Math.cos(1 * Math.PI) * headRadius + xm;
+var hairBottomY = Math.sin(1 * Math.PI) * headRadius + ym;
+
+ctx.moveTo(hairTopX,hairTopY);
+ctx.bezierCurveTo(canvas.width/2, canvas.height/2, canvas.width/4, canvas.height/3, hairBottomX, hairBottomY);
+ctx.arc(xm, ym, headRadius, Math.PI, -0.3 * Math.PI);
+ctx.fillStyle = "#000000";
+ctx.fill();
+ctx.stroke();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", mapEventListeners());
+function mapEventListeners() {
+	var body = document.getElementsByTagName("body")[0];
+	body.onmousedown = function(){eyes("red", "red")};
+	body.onmouseup = function(){eyes("white")};
+	body.onkeydown = function(){eyes("red", "red")};
+	body.onkeyup =  function(){eyes("white")};
+	body.ontouchstart = function(){eyes("red", "red")};
+	body.ontouchend =  function(){eyes("white")};
+	body.ontouchcancel =  function(){eyes("white")};
+}
+</script>
